@@ -1,0 +1,7 @@
+.derivedData/
+test-results.xcresult/
+exported-attachments/
+*.xcodeproj/
+xcuserdata/
+DerivedData/
+.build/

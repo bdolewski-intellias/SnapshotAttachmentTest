@@ -1,0 +1,42 @@
+name: SnapshotAttachmentTest
+options:
+  bundleIdPrefix: com.test
+  deploymentTarget:
+    iOS: "18.0"
+  xcodeVersion: "26.0"
+
+settings:
+  base:
+    SWIFT_VERSION: "6.2"
+
+packages:
+  SnapshotTesting:
+    url: https://github.com/pointfreeco/swift-snapshot-testing
+    exactVersion: "1.19.0"
+
+targets:
+  SnapshotAttachmentTest:
+    type: application
+    platform: iOS
+    sources:
+      - Sources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.test.SnapshotAttachmentTest
+        GENERATE_INFOPLIST_FILE: YES
+
+  SnapshotAttachmentTestTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - Tests
+    dependencies:
+      - target: SnapshotAttachmentTest
+      - package: SnapshotTesting
+        product: SnapshotTesting
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.test.SnapshotAttachmentTestTests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/SnapshotAttachmentTest.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SnapshotAttachmentTest"
+        BUNDLE_LOADER: "$(TEST_HOST)"
