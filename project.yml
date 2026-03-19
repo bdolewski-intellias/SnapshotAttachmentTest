@@ -11,8 +11,7 @@ settings:
 
 packages:
   SnapshotTesting:
-    url: https://github.com/pointfreeco/swift-snapshot-testing
-    exactVersion: "1.19.0"
+    path: swift-snapshot-testing-local
 
 targets:
   SnapshotAttachmentTest:

@@ -5,3 +5,7 @@ exported-attachments/
 xcuserdata/
 DerivedData/
 .build/
+swift-snapshot-testing-local/
+.derivedData-fixed/
+test-results-fixed.xcresult/
+exported-attachments-fixed/
