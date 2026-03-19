@@ -83,9 +83,11 @@ The manifest contains only a text attachment (`Complete Issue Description.txt`).
 ]
 ```
 
-## Suggested Fix
+## Verified Fix
 
-Migrate `UIImage.swift` to use `Diffing.diff(toData:fromData:diffV2:)` with `DiffAttachment.data` — the same pattern already applied to `NSImage.swift` in PR #1064:
+The [`fix/uiimage-diffattachment`](https://github.com/bdolewski-intellias/SnapshotAttachmentTest/tree/fix/uiimage-diffattachment) branch contains a **working, verified fix**. It migrates `UIImage.swift` to `Diffing.diff(toData:fromData:diffV2:)` with `DiffAttachment.data` — the same pattern already applied to `NSImage.swift` in PR #1064.
+
+The fix is a 14-line patch ([`uiimage-diffattachment.patch`](https://github.com/bdolewski-intellias/SnapshotAttachmentTest/blob/fix/uiimage-diffattachment/uiimage-diffattachment.patch)):
 
 ```swift
 // Before (current — deprecated, attachments dropped in Swift Testing):
@@ -99,7 +101,7 @@ return Diffing(
 }
 
 // After (works in both XCTest and Swift Testing):
-return Diffing.diff(
+return .diff(
     toData: { $0.pngData() ?? emptyImage().pngData()! },
     fromData: { UIImage(data: $0, scale: imageScale)! }
 ) { old, new in
@@ -107,6 +109,27 @@ return Diffing.diff(
     let oldAttachment = DiffAttachment.data(old.pngData()!, name: "reference.png")
     ...
 }
+```
+
+### Results after fix
+
+Running the same failing test with the patched `UIImage.swift` produces **3 image attachments** in the xcresult:
+
+```
+Exported 4 attachments for: AttachmentTests/redSquare():
+  reference_0_*.png  (2,755 bytes)
+  failure_0_*.png    (2,756 bytes)
+  difference_0_*.png (1,368 bytes)
+  Complete Issue Description.txt
+```
+
+### Reproduce the fix
+
+The branch includes a [`reproduce.sh`](https://github.com/bdolewski-intellias/SnapshotAttachmentTest/blob/fix/uiimage-diffattachment/reproduce.sh) script that clones 1.19.0, applies the patch, and runs the tests in one command:
+
+```bash
+git checkout fix/uiimage-diffattachment
+./reproduce.sh
 ```
 
 ## Project Setup
